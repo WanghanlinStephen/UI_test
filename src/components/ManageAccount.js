@@ -1,5 +1,14 @@
-import { Button, Panel, DropdownButton, MenuItem, FormControl } from 'react-bootstrap';
+import {Button, Panel, DropdownButton, MenuItem, FormControl, Tooltip, OverlayTrigger} from 'react-bootstrap';
 import createReactClass from 'create-react-class';
+
+
+const TooltipWrapper = ({message, children}) => {
+  return <OverlayTrigger placement={'top'} overlay={<Tooltip>
+    <strong>{message}</strong>
+  </Tooltip>}>
+    {children}
+  </OverlayTrigger>
+}
 
 const ManageAccount = createReactClass({
   getInitialState: function() {
@@ -7,7 +16,11 @@ const ManageAccount = createReactClass({
       accountTypes: ['type1', 'type2', 'type3'],
       accountNames: ['name1', 'name2', 'name3'],
       odinMaterialSet: '',
-      posixGroups: ['group1', 'group2', 'group3']
+      posixGroups: ['group1', 'group2', 'group3'],
+
+      accountType: '',
+      accountName: '',
+      posixGroup: ''
     };
   },
 
@@ -15,6 +28,30 @@ const ManageAccount = createReactClass({
     this.setState({
       odinMaterialSet: e.target.value
     });
+  },
+
+  handleClickAccountType: function (type) {
+
+    this.setState({
+      accountType: type
+    })
+  },
+
+  handleClickAccountName: function (name) {
+    this.setState({
+      accountName: name
+    })
+  },
+
+  handleClickPosixGroup: function (group) {
+    this.setState({
+      posixGroup: group
+    })
+  },
+
+  handleSubmit: function (e) {
+    // submit create
+    console.log(this.state)
   },
 
   render: function() {
@@ -31,7 +68,9 @@ const ManageAccount = createReactClass({
               <h5 style={{ fontWeight: 'bold', marginBottom: '0px' }}>
                 Account Type
                 <small>
-                  <Button href={'http://xx.com'} bsStyle={'link'}>Info</Button>
+                  <TooltipWrapper message={'This is info message'}>
+                    <Button href={'http://xx.com'} bsStyle={'link'}>Info</Button>
+                  </TooltipWrapper>
                 </small>
               </h5>
               <p style={{ color: 'grey', marginTop: '0px' }}>
@@ -39,11 +78,17 @@ const ManageAccount = createReactClass({
               </p>
               <DropdownButton
                 bsSize={''}
-                title={"Choose an account type"}
+                title={this.state.accountType || "Choose an account type"}
               >
                 {this.state.accountTypes.map(type => {
                   return (
-                    <MenuItem eventKey={type} key={type}>
+                    <MenuItem
+                      active={this.state.accountType === type}
+                      onClick={() => {
+                        this.handleClickAccountType(type)
+                      }}
+                      eventKey={type}
+                      key={type}>
                       {type}
                     </MenuItem>
                   );
@@ -55,7 +100,9 @@ const ManageAccount = createReactClass({
               <h5 style={{ fontWeight: 'bold', marginBottom: '0px' }}>
                 Account name
                 <small>
-                  <Button href={'http://xx.com'} bsStyle={'link'}>Info</Button>
+                  <TooltipWrapper message={'This is info message'}>
+                    <Button href={'http://xx.com'} bsStyle={'link'}>Info</Button>
+                  </TooltipWrapper>
                 </small>
               </h5>
               <p style={{ color: 'grey', marginTop: '0px' }}>
@@ -63,11 +110,17 @@ const ManageAccount = createReactClass({
               </p>
               <DropdownButton
                 bsSize={''}
-                title={this.state.accountNames[0] || ''}
+                title={this.state.accountName || 'Choose an account name'}
               >
                 {this.state.accountNames.map(name => {
                   return (
-                    <MenuItem eventKey={name} key={name}>
+                    <MenuItem
+                      onClick={() => {
+                        this.handleClickAccountName(name)
+                      }}
+                      active={this.state.accountName === name}
+                      eventKey={name}
+                      key={name}>
                       {name}
                     </MenuItem>
                   );
@@ -79,7 +132,9 @@ const ManageAccount = createReactClass({
               <h5 style={{ fontWeight: 'bold', marginBottom: '0px' }}>
                 Odin material setinfo
                 <small>
-                  <Button href={'http://xx.com'} bsStyle={'link'}>Info</Button>
+                  <TooltipWrapper message={'This is info message'}>
+                    <Button href={'http://xx.com'} bsStyle={'link'}>Info</Button>
+                  </TooltipWrapper>
                 </small>
               </h5>
               <p style={{ color: 'grey', marginTop: '0px' }}>
@@ -96,7 +151,9 @@ const ManageAccount = createReactClass({
               <h5 style={{ fontWeight: 'bold', marginBottom: '0px' }}>
                 Posix group
                 <small>
-                  <Button href={'http://xx.com'} bsStyle={'link'}>Info</Button>
+                  <TooltipWrapper message={'This is info message'}>
+                    <Button href={'http://xx.com'} bsStyle={'link'}>Info</Button>
+                  </TooltipWrapper>
                 </small>
               </h5>
               <p style={{ color: 'grey', marginTop: '0px' }}>
@@ -104,16 +161,27 @@ const ManageAccount = createReactClass({
               </p>
               <DropdownButton
                 bsSize={''}
-                title={'Choose and posix group'}
+                title={this.state.posixGroup || 'Choose and posix group'}
               >
                 {this.state.posixGroups.map(group => {
                   return (
-                    <MenuItem eventKey={group} key={group}>
+                    <MenuItem
+                      active={this.state.posixGroup === group}
+                      onClick={() => {
+                        this.handleClickPosixGroup(group);
+                      }}
+                      eventKey={group} key={group}>
                       {group}
                     </MenuItem>
                   );
                 })}
               </DropdownButton>
+
+              <div style={{marginTop: '30px'}}>
+                <Button
+                  onClick={this.handleSubmit}
+                  bsStyle="success">Submit</Button>
+              </div>
             </div>
           </Panel.Body>
         </Panel>
